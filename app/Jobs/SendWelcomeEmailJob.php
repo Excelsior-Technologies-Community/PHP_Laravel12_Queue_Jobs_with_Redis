@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Jobs;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,12 +22,15 @@ class SendWelcomeEmailJob implements ShouldQueue
         $this->email = $email;
     }
 
+
+
     public function handle(): void
     {
-        sleep(5);
-        Log::info('Welcome email sent to: ' . $this->email);
+        Mail::raw('Welcome! Queue email working 🎉', function ($message) {
+            $message->to($this->email)
+                ->subject('Laravel Queue Email');
+        });
     }
-
     public function failed(\Throwable $exception): void
     {
         Log::error('Job Failed: ' . $exception->getMessage());

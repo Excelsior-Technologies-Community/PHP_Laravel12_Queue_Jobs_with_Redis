@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Send Mail</title>
+    <title>Failed Jobs</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -44,13 +44,6 @@
             margin-left: 220px;
             padding: 40px;
         }
-
-        .box {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            max-width: 500px;
-        }
     </style>
 </head>
 
@@ -58,33 +51,29 @@
 
     <div class="sidebar">
         <h4>⚡ Queue Panel</h4>
-        <a href="/" class="active-link">📧 Send Mail</a>
+        <a href="/">📧 Send Mail</a>
         <a href="/schedule">⏰ Schedule Mail</a>
-        <a href="/failed-jobs">❌ Failed Jobs</a>
+        <a href="/failed-jobs" class="active-link">❌ Failed Jobs</a>
     </div>
 
     <div class="main">
-        <h3 class="mb-4">Send Email</h3>
+        <h3 class="mb-4">Failed Jobs</h3>
 
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <div>{{ $error }}</div>
-                @endforeach
-            </div>
-        @endif
+        @forelse($jobs as $job)
+            <div class="card mb-3 p-3 shadow-sm">
+                <p><b>ID:</b> {{ $job->id }}</p>
+                <p><b>Error:</b> {{ \Illuminate\Support\Str::limit($job->exception, 120) }}</p>
+                <p><b>Time:</b> {{ $job->failed_at }}</p>
 
-        <div class="box">
-            <form method="POST" action="{{ route('send.mail') }}">
-                @csrf
-                <input type="email" name="email" class="form-control mb-3" placeholder="Enter email" required>
-                <button class="btn btn-primary w-100">Dispatch Job</button>
-            </form>
-        </div>
+                <a href="/retry/{{ $job->id }}" class="btn btn-warning btn-sm">Retry</a>
+            </div>
+        @empty
+            <div class="alert alert-info">🎉 No Failed Jobs</div>
+        @endforelse
     </div>
 
 </body>
