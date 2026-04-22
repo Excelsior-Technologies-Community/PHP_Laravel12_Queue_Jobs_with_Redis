@@ -333,3 +333,8 @@ the job was executed asynchronously via Redis queue worker.
 ---
 
 Your PHP_Laravel12_Queue_Jobs_with_Redis Project is now ready!
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> development
