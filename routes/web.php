@@ -11,5 +11,8 @@ Route::get('/schedule', function () {
 });
 Route::post('/schedule-mail', [QueueController::class, 'scheduleMail'])->name('schedule.mail');
 
-Route::get('/failed-jobs', [QueueController::class, 'failed']);
-Route::get('/retry/{id}', [QueueController::class, 'retry']);
+Route::post('/queue/batch', [QueueController::class, 'dispatchBatch'])->name('queue.batch');
+Route::post('/queue/chain', [QueueController::class, 'dispatchChain'])->name('queue.chain');
+
+Route::get('/failed-jobs', [QueueController::class, 'failed'])->name('failed.jobs');
+Route::get('/retry/{id}', [QueueController::class, 'retry'])->name('retry.job');
